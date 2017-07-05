@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <toolshelf name="hou_farm_shelf" label="Hou Farm">
+    <memberTool name="hou_farm_patch_tool"/>
+    <memberTool name="hou_farm_unpatch_tool"/>
+  </toolshelf>
+
+  <tool name="hou_farm_patch_tool" label="Patch" icon="hicon:/SVGIcons.index?BUTTONS_add.svg">
+    <script scriptType="python"><![CDATA[import hou
+
+global kwargs
+
+try:
+    import hou_farm.tools as hou_farm_tools
+    reload(hou_farm_tools)
+
+    if hou_farm_tools.validate_environment("deadline"):
+        hou_farm_tools.patch_selected_rops(kwargs,"deadline")
+
+except Exception as err:
+    import traceback
+    hou.ui.displayMessage("Error in \"hou_farm.tools\" module", severity=hou.severityType.Error,
+                          title="Python Error", details=traceback.format_exc())
+
+]]></script>
+  </tool>
+
+  <tool name="hou_farm_unpatch_tool" label="Unpatch" icon="hicon:/SVGIcons.index?BUTTONS_remove.svg">
+    <script scriptType="python"><![CDATA[import hou
+
+global kwargs
+
+try:
+    import hou_farm.tools as hou_farm_tools
+    reload(hou_farm_tools)
+
+    if hou_farm_tools.validate_environment("deadline"):
+        hou_farm_tools.unpatch_selected_rops(kwargs, "deadline")
+
+except Exception as err:
+    import traceback
+    hou.ui.displayMessage("Error in \"hou_farm.tools\" module", severity=hou.severityType.Error,
+                          title="Python Error", details=traceback.format_exc())
+
+]]></script>
+  </tool>
+</shelfDocument>

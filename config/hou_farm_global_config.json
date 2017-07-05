@@ -1,0 +1,156 @@
+{
+  "name": "hou_farm_config",
+  "version": "1.0",
+  "farm": {
+    "deadline": {
+      "include_blocks": {
+        "JOB": [
+          {"name": "hf_job_name", "label": "Job Name", "type": "str", "num_components": 1, "default_value": ["`toupper(optype(\".\"))` - `opfullpath(\".\")`"]},
+          {"name": "hf_comment", "label": "Comment", "type": "str", "num_components": 1, "default_value": ["`opfullpath(\".\")`"]}
+        ],
+        "SUBMIT": [
+          {"name": "hf_override_frames", "label": "Override Frames", "type": "bool", "default_value": false, "join_with_next": true},
+          {"name": "hf_frames", "label": "Frames", "type": "str", "num_components": 1, "default_value": ["1-100"], "disable_when": "{ hf_override_frames == 0 }", "is_label_hidden": true},
+          {"name": "hf_submit_scene", "label": "Submit Scene File", "type": "bool", "default_value": false},
+          {"name": "hf_submit_branch", "label": "Submit Branch", "type": "button", "script_callback": "submit_branch_button_callback"},
+          {"name": "hf_submit_this", "label": "Submit This Node Only", "type": "button", "script_callback": "submit_node_button_callback"},
+          {"name": "hf_submit_tree", "label": "Submit Whole Tree", "type": "button", "script_callback": "submit_tree_button_callback"},
+          {"name": "hf_validate_only", "label": "Validate Only", "type": "bool", "default_value": false}
+        ],
+        "HOUDINI": [
+          {"name": "hf_houdini_pool", "label": "Pool", "type": "str", "num_components": 1, "default_value": ["do_not_interrupt"], "item_generator_script": "pool_menu_callback"},
+          {"name": "hf_houdini_secondary_pool", "label": "Secondary Pool", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "pool_menu_callback"},
+          {"name": "hf_houdini_group", "label": "Group", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "group_menu_callback"},
+          {"name": "hf_houdini_priority", "label": "Priority", "type": "int", "num_components": 1, "default_value": [50], "min": 1, "max": 100, "min_is_strict": true, "max_is_strict": true},
+          {"name": "hf_houdini_split_by", "label": "Split By", "type": "str", "num_components": 1, "default_value": ["chunks"], "menu_items": ["chunks", "frames"], "menu_labels": ["Chunks", "Frames"]},
+          {"name": "hf_houdini_chunks", "label": "Chunks", "type": "int", "num_components": 1, "default_value": [5], "min": 1, "max": 20, "disable_when": "{ hf_houdini_split_by != chunks }"},
+          {"name": "hf_houdini_frames", "label": "Frames", "type": "int", "num_components": 1, "default_value": [100], "min": 1, "max": 500, "disable_when": "{ hf_houdini_split_by != frames }"}
+        ],
+        "HOUDINI_ADVANCED": [
+          {"name": "hf_houdini_enable_auto_timeout", "label": "Enable Auto Timeout", "type": "bool", "default_value": false},
+          {"name": "hf_houdini_task_timeout", "label": "Task Timeout (Mins)", "type": "int", "num_components": 1, "default_value": [0], "min": 0, "disable_when": "{ hf_houdini_enable_auto_timeout == 1 }"},
+          {"name": "hf_houdini_submit_limit_to_slave_limit", "label": "Limit Tasks To Slave's Task Limit", "type": "bool", "default_value": true},
+          {"name": "hf_houdini_concurrent_tasks", "label": "Concurrent Tasks", "type": "int", "num_components": 1, "default_value": [1], "min": 1},
+          {"name": "hf_houdini_machine_limit", "label": "Machine Limit", "type": "int", "num_components": 1, "default_value": [0], "min": 0},
+          {"name": "hf_houdini_submit_machine_list_is_blacklist", "label": "Machine List Is A Blacklist", "type": "bool", "default_value": false},
+          {"name": "hf_houdini_machine_list", "label": "Machine List", "type": "str", "num_components": 1, "default_value": [""], "join_with_next": true},
+          {"name": "hf_houdini_machine_list_browse_button", "label": "...", "type": "button", "script_callback": "select_deadline_machine_list_callback"},
+          {"name": "hf_houdini_limits", "label": "Limits", "type": "str", "num_components": 1, "default_value": [""], "join_with_next": true},
+          {"name": "hf_houdini_limits_browse_button", "label": "...", "type": "button", "script_callback": "select_deadline_limits_callback"},
+          {"name": "hf_houdini_dependencies", "label": "Dependencies", "type": "str", "num_components": 1, "default_value": [""], "join_with_next": true},
+          {"name": "hf_houdini_dependencies_browse_button", "label": "...", "type": "button", "script_callback": "select_deadline_dependencies_callback"}
+        ],
+        "MANTRA": [
+          {"name": "hf_mantra_pool", "label": "Pool", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "pool_menu_callback"},
+          {"name": "hf_mantra_secondary_pool", "label": "Secondary Pool", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "pool_menu_callback"},
+          {"name": "hf_mantra_group", "label": "Group", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "group_menu_callback"},
+          {"name": "hf_mantra_priority", "label": "Priority", "type": "int", "num_components": 1, "default_value": [50], "min": 1, "max": 100, "min_is_strict": true, "max_is_strict": true}
+        ],
+        "MANTRA_ADVANCED": [
+          {"name": "hf_mantra_enable_auto_timeout", "label": "Enable Auto Timeout", "type": "bool", "default_value": false},
+          {"name": "hf_mantra_task_timeout", "label": "Task Timeout (Mins)", "type": "int", "num_components": 1, "default_value": [0], "min": 0, "disable_when": "{ hf_mantra_enable_auto_timeout == 1 }"},
+          {"name": "hf_mantra_submit_limit_to_slave_limit", "label": "Limit Tasks To Slave's Task Limit", "type": "bool", "default_value": true},
+          {"name": "hf_mantra_concurrent_tasks", "label": "Concurrent Tasks", "type": "int", "num_components": 1, "default_value": [1], "min": 1},
+          {"name": "hf_mantra_machine_limit", "label": "Machine Limit", "type": "int", "num_components": 1, "default_value": [0], "min": 0},
+          {"name": "hf_mantra_submit_machine_list_is_blacklist", "label": "Machine List Is A Blacklist", "type": "bool", "default_value": false},
+          {"name": "hf_mantra_machine_list", "label": "Machine List", "type": "str", "num_components": 1, "default_value": [""], "join_with_next": true},
+          {"name": "hf_mantra_machine_list_browse_button", "label": "...", "type": "button", "script_callback": "select_deadline_machine_list_callback"},
+          {"name": "hf_mantra_limits", "label": "Limits", "type": "str", "num_components": 1, "default_value": [""], "join_with_next": true},
+          {"name": "hf_mantra_limits_browse_button", "label": "...", "type": "button", "script_callback": "select_deadline_limits_callback"}
+        ],
+        "SETTINGS": [
+          {"name": "hf_refresh_deadline_data", "label": "Refresh Pools/Groups", "type": "button", "script_callback": "refresh_deadline_data_button_callback"}
+        ]
+      },
+      "nodes": {
+        "driver":{    
+          "ifd": [
+            {"type": "include", "section": "JOB"},
+            {"name": "hf_submit_folder", "label": "Submit", "type": "folder", "folder_type": "Tabs", "children":
+              [
+                {"type": "include", "section": "SUBMIT"}
+              ]
+            },
+            {"name": "hf_ifd_folder", "label": "IFD", "type": "folder", "folder_type": "Tabs", "children":
+              [
+                {"type": "include", "section": "HOUDINI"},
+                {"name": "hf_advanced_ifd_folder", "label": "Advanced", "type": "folder", "folder_type": "Collapsible", "children":
+                  [
+                    {"type": "include", "section": "HOUDINI_ADVANCED"}
+                  ]
+                }
+              ]
+            },
+            {"name": "hf_mantra_folder", "label": "Mantra", "type": "folder", "folder_type": "Tabs", "children":
+            [
+              {"type": "include", "section": "MANTRA"},
+              {"name": "hf_advanced_mantra_folder", "label": "Advanced", "type": "folder", "folder_type": "Collapsible", "children":
+                [
+                  {"type": "include", "section": "MANTRA_ADVANCED"}
+                ]
+              }
+            ]
+            },
+            {"name": "hf_settings_folder", "label": "Settings", "type": "folder", "folder_type": "Tabs", "children":
+              [
+                {"type": "include", "section": "SETTINGS"}
+              ]
+            }
+          ],
+          "geometry": [
+            {"type": "include", "section": "JOB"},
+            {"name": "hf_submit_folder", "label": "Submit", "type": "folder", "folder_type": "Tabs", "children":
+              [
+                {"type": "include", "section": "SUBMIT"}
+              ]
+            },
+            {"name": "hf_job_folder", "label": "Job", "type": "folder", "folder_type": "Tabs", "children":
+              [
+                {"type": "include", "section": "HOUDINI"},
+                {"name": "hf_advanced_job_folder", "label": "Advanced", "type": "folder", "folder_type": "Collapsible", "children":
+                  [
+                    {"type": "include", "section": "HOUDINI_ADVANCED"}
+                  ]
+                }
+              ]
+            },
+            {"name": "hf_settings_folder", "label": "Settings", "type": "folder", "folder_type": "Tabs", "children":
+              [
+                {"type": "include", "section": "SETTINGS"}
+              ]
+            }
+          ],
+          "alembic": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ],
+          "ifdarchive": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ],
+          "comp": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ],
+          "channel": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ],
+          "baketexture": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ],
+          "opengl": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ],
+          "dop": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ],
+          "baketexture::3.0": [
+             {"type": "instance", "context":"driver", "node": "ifd"}
+          ]
+        },
+        "sop":{
+          "rop_geometry": [
+             {"type": "instance", "context":"driver", "node": "geometry"}
+          ]
+        }
+      }
+    }
+  }
+}
