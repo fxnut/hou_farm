@@ -45,11 +45,18 @@ def validate_environment(error_list_obj):
 
 def get_deadline_command_string():
     """
-    Retrieves the Deadline/bin path and the Deadline executable path
+    Retrieves the Deadline/bin path and the Deadline executable path.
+    
+    If HOUFARM_VIRTUAL_DEADLINE is set, then it returns empty strings in the tuple.
+
     Returns:
         Tuple Pair: First element is a string containing the Deadline/bin path, 
                     the second element is a string containing the path to the executable.
     """
+
+    # Setting HOUFARM_VIRTUAL_DEADLINE as an environment variable allows you to run and test Hou Farm without having Deadline installed
+    if "HOUFARM_VIRTUAL_DEADLINE" in os.environ:
+        return ["",""]
 
     # On OSX, we look for the DEADLINE_PATH file. On other platforms, we use the environment variable.
     if os.path.exists("/Users/Shared/Thinkbox/DEADLINE_PATH"):
@@ -64,11 +71,40 @@ def get_deadline_command_string():
             return deadline_bin, os.path.join(deadline_bin, "deadlinecommand")    
 
 
+def call_virtual_deadline_command(arguments, background=True, read_stdout=True):
+    cmd = arguments[0]
+    if cmd == "-selectmachinelist":
+        hou.ui.displayMessage("\"Select Machine List\" Dialog."
+            "\n\nYou're seeing this message box because Deadline Virtual mode is currently enabled.\nHOUFARM_VIRTUAL_DEADLINE is set.",("OK",), hou.severityType.Message)
+        return "machine1 \nmachine2 \nmachine3"
+    elif cmd == "-selectlimitgroups":
+        hou.ui.displayMessage("\"Select Limit Group List\" Dialog."
+            "\n\nYou're seeing this message box because Deadline Virtual mode is currently enabled.\nHOUFARM_VIRTUAL_DEADLINE is set.",("OK",), hou.severityType.Message)
+        return "group1 \ngroup2 \ngroup3"
+    elif cmd == "-selectdependencies":
+        hou.ui.displayMessage("\"Select Job Dependency List\" Dialog."
+            "\n\nYou're seeing this message box because Deadline Virtual mode is currently enabled.\nHOUFARM_VIRTUAL_DEADLINE is set.",("OK",), hou.severityType.Message)
+        return "123 456 789"
+    elif cmd == "-getmaximumpriority":
+        return 100
+    elif cmd == "-pools":
+        return "none \npool1 \npool2\n pool3"
+    elif cmd == "-groups":
+        return "none \ngroup1 \ngroup2 \ngroup3"
+    elif cmd == "-GetCurrentUserHomeDirectory":
+        return os.environ["HOME"]
+
+    hou.ui.displayMessage("Unsupported Virtual Deadline Command."
+        "\n\nYou're seeing this message box because Deadline Virtual mode is currently enabled.\nHOUFARM_VIRTUAL_DEADLINE is set.",("OK",), hou.severityType.Message)
+
+
 def call_deadline_command(arguments, background=True, read_stdout=True):
     """
     Calls the Deadline command line tool with arguments and returns the output
     Taken from deadline8_repo\submission\Houdini\Main\SubmitHoudiniToDeadline.py
     Some minor modifications have been made for formatting
+
+    If HOUFARM_VIRTUAL_DEADLINE is set, then calls are forwarded to call_virtual_deadline_command() instead.
 
     Args:
         arguments (list): A list of strings to pass to the deadline command as arguments
@@ -78,6 +114,10 @@ def call_deadline_command(arguments, background=True, read_stdout=True):
     Returns:
         String: Output from calling deadline's command
     """
+
+    # Setting HOUFARM_VIRTUAL_DEADLINE as an environment variable allows you to run and test Hou Farm without having Deadline installed
+    if "HOUFARM_VIRTUAL_DEADLINE" in os.environ:
+        return call_virtual_deadline_command(arguments, background, read_stdout)
 
     deadline_bin, deadline_command = get_deadline_command_string()
 
@@ -474,6 +514,8 @@ def write_job_files(plugin_name, job_index, job_parm_dict, plugin_parm_dict):
     This mimics the way Thinkbox write their submitters and also uses an incrementing job_index method to avoid file
     clashes. This is far from foolproof and could be improved on.
 
+    If HOUFARM_VIRTUAL_DEADLINE is defined then filenames are constructed, but no files are written.
+
     Args:
         plugin_name (str): Name of the plugin being submitted: "Mantra" for renders and "Houdini" for everything else
         job_index (int): Unique job index to ensure files don't overwrite each other
@@ -486,25 +528,32 @@ def write_job_files(plugin_name, job_index, job_parm_dict, plugin_parm_dict):
     deadline_globals = get_global_data()
     job_filename = os.path.join(deadline_globals.home_dir, "temp",
                                 "{0}_submit_info{1}.job".format(plugin_name, job_index))
-    file_handle = open(job_filename, "w")
+    
+    # Setting HOUFARM_VIRTUAL_DEADLINE as an environment variable allows you to run and test Hou Farm without having Deadline installed
+    if "HOUFARM_VIRTUAL_DEADLINE" not in os.environ:
+        file_handle = open(job_filename, "w")
 
-    for key, value in job_parm_dict.iteritems():
-        file_handle.write("{0}={1}\n".format(key, value))
-    file_handle.close()
+        for key, value in job_parm_dict.iteritems():
+            file_handle.write("{0}={1}\n".format(key, value))
+        file_handle.close()
 
     plugin_filename = os.path.join(deadline_globals.home_dir, "temp",
                                    "{0}_plugin_info{1}.job".format(plugin_name, job_index))
-    file_handle = open(plugin_filename, "w")
+    
+    if "HOUFARM_VIRTUAL_DEADLINE" not in os.environ:
+        file_handle = open(plugin_filename, "w")
 
-    for key, value in plugin_parm_dict.iteritems():
-        file_handle.write("{0}={1}\n".format(key, value))
-    file_handle.close()
+        for key, value in plugin_parm_dict.iteritems():
+            file_handle.write("{0}={1}\n".format(key, value))
+        file_handle.close()
+    
     return job_filename, plugin_filename
 
 
 def submit_job_files_to_deadline(job_filename, plugin_filename, submit_scene):
     """
     Performs the actual job submission to Deadline.
+    If HOUFARM_VIRTUAL_DEADLINE is defined, then it will return a unique dummy job id for testing.
 
     Args:
         job_filename (str): The filename of the job file
@@ -518,14 +567,19 @@ def submit_job_files_to_deadline(job_filename, plugin_filename, submit_scene):
     if submit_scene:
         arguments.append(hou.hipFile.path())
 
-    job_result = call_deadline_command(arguments)
-    job_id = ""
-    result_array = job_result.split("\n")
-    for line in result_array:
-        if line.startswith("JobID="):
-            job_id = line.replace("JobID=", "")
-            job_id = job_id.strip()
-            break
+    # Setting HOUFARM_VIRTUAL_DEADLINE as an environment variable allows you to run and test Hou Farm without having Deadline installed
+    if "HOUFARM_VIRTUAL_DEADLINE" in os.environ:
+        md5_encoder = hashlib.md5()
+        job_id = md5_encoder.update("".join(arguments))
+    else:
+        job_result = call_deadline_command(arguments)
+        job_id = ""
+        result_array = job_result.split("\n")
+        for line in result_array:
+            if line.startswith("JobID="):
+                job_id = line.replace("JobID=", "")
+                job_id = job_id.strip()
+                break
     return job_id
 
 

@@ -18,7 +18,7 @@
           {"name": "hf_validate_only", "label": "Validate Only", "type": "bool", "default_value": false}
         ],
         "HOUDINI": [
-          {"name": "hf_houdini_pool", "label": "Pool", "type": "str", "num_components": 1, "default_value": ["do_not_interrupt"], "item_generator_script": "pool_menu_callback"},
+          {"name": "hf_houdini_pool", "label": "Pool", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "pool_menu_callback"},
           {"name": "hf_houdini_secondary_pool", "label": "Secondary Pool", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "pool_menu_callback"},
           {"name": "hf_houdini_group", "label": "Group", "type": "str", "num_components": 1, "default_value": ["none"], "item_generator_script": "group_menu_callback"},
           {"name": "hf_houdini_priority", "label": "Priority", "type": "int", "num_components": 1, "default_value": [50], "min": 1, "max": 100, "min_is_strict": true, "max_is_strict": true},
