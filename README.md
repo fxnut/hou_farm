@@ -30,6 +30,7 @@ A Deadline farm submission tool.
     * Missing specified Deadline pool
     * Camera background image enabled
   * Gracefull fallback should hou_farm or Deadline not be present on the system. Won't break your scene or generate annoying errors.
+  * Allows you to develop/test Hou Farm without Deadline installed by defining HOUFARM_VIRTUAL_DEADLINE in the environment.
 
 ## Installation
 
