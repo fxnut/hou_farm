@@ -1,6 +1,8 @@
 # hou_farm
 A Deadline farm submission tool.
 
+For a short blog post with screen shots, go here: http://www.andynicholas.com/?p=1877
+
 ## Features
 
   * Do away with the cluttered and over-complicated submission dialog. Instead, it places all the submission settings on the ROP nodes. This saves having to remember the settings for each ROP task that you submit to the farm.
@@ -30,6 +32,7 @@ A Deadline farm submission tool.
     * Missing specified Deadline pool
     * Camera background image enabled
   * Gracefull fallback should hou_farm or Deadline not be present on the system. Won't break your scene or generate annoying errors.
+  * Allows you to develop/test Hou Farm without Deadline installed by defining HOUFARM_VIRTUAL_DEADLINE in the environment.
 
 ## Installation
 
