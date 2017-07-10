@@ -1,7 +1,9 @@
 # hou_farm
 A Deadline farm submission tool.
 
-For a short blog post with screen shots, go here: http://www.andynicholas.com/?p=1877
+![Hou Farm Screenshot](http://www.andynicholas.com/wp-content/uploads/2017/07/Submit.png)
+
+For a short blog post with more screen shots, go here: http://www.andynicholas.com/?p=1877
 
 ## Features
 
