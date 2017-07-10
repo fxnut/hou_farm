@@ -1,6 +1,8 @@
 # hou_farm
 A Deadline farm submission tool.
 
+For a short blog post with screen shots, go here: http://www.andynicholas.com/?p=1877
+
 ## Features
 
   * Do away with the cluttered and over-complicated submission dialog. Instead, it places all the submission settings on the ROP nodes. This saves having to remember the settings for each ROP task that you submit to the farm.
