@@ -3,7 +3,7 @@ A Deadline farm submission tool.
 
 ## Features
 
-  * No submission dialog. Instead, it places all the submission settings on the ROP nodes. This saves having to remember the settings for each ROP task that you submit to the farm.
+  * Do away with the cluttered and over-complicated submission dialog. Instead, it places all the submission settings on the ROP nodes. This saves having to remember the settings for each ROP task that you submit to the farm.
   * Hides many of the less common Deadline settings under an Advanced section (hidden by default)
   * Supports the following ROPs (not all fully tested yet, although they should be fine):
     * Mantra ROP
