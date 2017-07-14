@@ -762,9 +762,9 @@ def handle_parms_houdini_advanced(rop_node, job_parm_dict):
     job_parm_dict["OnJobComplete"] = "Nothing"
 
     if rop_node.parm("hf_houdini_submit_machine_list_is_blacklist").evalAsInt() == 1:
-        job_parm_dict["BlackList"] = rop_node.parm("hf_houdini_machine_list").evalAsString()
+        job_parm_dict["Blacklist"] = rop_node.parm("hf_houdini_machine_list").evalAsString()
     else:
-        job_parm_dict["WhiteList"] = rop_node.parm("hf_houdini_machine_list").evalAsString()
+        job_parm_dict["Whitelist"] = rop_node.parm("hf_houdini_machine_list").evalAsString()
 
 
 def handle_parms_mantra(rop_node, job_parm_dict):
@@ -804,9 +804,9 @@ def handle_parms_mantra_advanced(rop_node, job_parm_dict):
     job_parm_dict["OnJobComplete"] = "Nothing"
 
     if rop_node.parm("hf_mantra_submit_machine_list_is_blacklist").evalAsInt() == 1:
-        job_parm_dict["BlackList"] = rop_node.parm("hf_mantra_machine_list").evalAsString()
+        job_parm_dict["Blacklist"] = rop_node.parm("hf_mantra_machine_list").evalAsString()
     else:
-        job_parm_dict["WhiteList"] = rop_node.parm("hf_mantra_machine_list").evalAsString()
+        job_parm_dict["Whitelist"] = rop_node.parm("hf_mantra_machine_list").evalAsString()
 
 
 # --------------------------------------------------------------------------
