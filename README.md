@@ -33,7 +33,7 @@ For a short blog post with more screen shots, go here: http://www.andynicholas.c
     * Using default IFD path
     * Missing specified Deadline pool
     * Camera background image enabled
-  * Gracefull fallback should hou_farm or Deadline not be present on the system. Won't break your scene or generate annoying errors.
+  * Graceful fallback should hou_farm or Deadline not be present on the system. Won't break your scene or generate annoying errors.
   * Allows you to develop/test Hou Farm without Deadline installed by defining HOUFARM_VIRTUAL_DEADLINE in the environment.
 
 ## Installation
@@ -62,7 +62,7 @@ For a short blog post with more screen shots, go here: http://www.andynicholas.c
   * Only tested on Windows so far. In theory, it should work fine on Linux and OSX, although I'm sure there'll be some fixes required.
   * Mostly written a functional style, and relatively little OOP. This was done mainly because I've been using OOP for a long time and after working on a pure C project, I wanted to experiment with seeing how necessary OOP actually is. Sometimes OOP just gets in the way. May decide at some point to rework some of this into classes to reduce code bloat.
   * Hou_farm was written to potentially expand to support other farm software. It would still need a lot of factorisation for better reuse of much of the Deadline code.
-  * There's a makefile for generating code documentation using Sphynx in the docs folder.
+  * There's a makefile for generating code documentation using Sphinx in the docs folder.
   
   
   
