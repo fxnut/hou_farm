@@ -1,9 +1,9 @@
 # hou_farm
-A Deadline farm submission tool.
+A Deadline farm submission tool. 
 
-![Hou Farm Screenshot](http://www.andynicholas.com/wp-content/uploads/2017/07/Submit.png)
+![Hou Farm Screenshot](doc/img/Submit.png)
 
-For a short blog post with more screen shots, go here: http://www.andynicholas.com/?p=1877
+For a short blog post with more screen shots, [click here](https://www.andynicholas.com/post/hou-farm-deadline-submission-tool-for-houdini)
 
 ## Features
 
@@ -63,6 +63,3 @@ For a short blog post with more screen shots, go here: http://www.andynicholas.c
   * Mostly written a functional style, and relatively little OOP. This was done mainly because I've been using OOP for a long time and after working on a pure C project, I wanted to experiment with seeing how necessary OOP actually is. Sometimes OOP just gets in the way. May decide at some point to rework some of this into classes to reduce code bloat.
   * Hou_farm was written to potentially expand to support other farm software. It would still need a lot of factorisation for better reuse of much of the Deadline code.
   * There's a makefile for generating code documentation using Sphinx in the docs folder.
-  
-  
-  
